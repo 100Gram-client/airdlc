@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Air DLC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo"><img src="logo.png" alt="Air DLC" class="nav-logo-img"><span>Air DLC</span></a>
+            <div class="nav-center" id="navCenter">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="features.html" class="nav-link">Features</a>
+                <a href="download.html" class="nav-link">Download</a>
+            </div>
+            <div class="nav-right" id="navRight" style="display:none">
+                <button class="nav-btn-outline" onclick="openModal('login')">Sign In</button>
+                <button class="nav-btn-fill" onclick="openModal('register')">Sign Up</button>
+            </div>
+            <div class="nav-right nav-right-auth" id="navRightAuth">
+                <a href="dashboard.html" class="nav-btn-outline">Dashboard</a>
+                <div class="nav-avatar" onclick="toggleProfileMenu()"><span id="navAvatarLetter">A</span></div>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="profile-dropdown-header"><span class="profile-dropdown-name" id="dropdownName">User</span><span class="profile-dropdown-email" id="dropdownEmail">email</span></div>
+                    <div class="profile-dropdown-divider"></div>
+                    <a class="profile-dropdown-item" href="dashboard.html">Dashboard</a>
+                    <div class="profile-dropdown-divider"></div>
+                    <a class="profile-dropdown-item profile-dropdown-logout" onclick="logout()">Log Out</a>
+                </div>
+            </div>
+            <button class="nav-burger" onclick="document.getElementById('navCenter').classList.toggle('mobile-open')"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <div class="dashboard">
+        <div class="dashboard-sidebar">
+            <div class="dashboard-user">
+                <div class="dashboard-avatar" id="dashAvatar">A</div>
+                <div class="dashboard-user-info">
+                    <span class="dashboard-user-name" id="dashName">User</span>
+                    <span class="dashboard-user-email" id="dashEmail">email</span>
+                </div>
+            </div>
+            <div class="dashboard-nav">
+                <a class="dashboard-nav-item active" data-tab="overview" onclick="switchDashTab('overview')">Overview</a>
+                <a class="dashboard-nav-item" data-tab="license" onclick="switchDashTab('license')">License</a>
+                <a class="dashboard-nav-item" data-tab="downloads" onclick="switchDashTab('downloads')">Downloads</a>
+                <a class="dashboard-nav-item" data-tab="settings-tab" onclick="switchDashTab('settings-tab')">Settings</a>
+                <a class="dashboard-nav-item admin-only" data-tab="admin" onclick="switchDashTab('admin')" style="display:none">Admin</a>
+                <a class="dashboard-nav-item admin-only" data-tab="updates" onclick="switchDashTab('updates')" style="display:none">Updates</a>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <!-- Overview -->
+            <div class="dash-tab active" id="dashTab-overview">
+                <h2 class="dash-tab-title">Overview</h2>
+                <div class="dash-cards">
+                    <div class="dash-card"><span class="dash-card-label">Status</span><div class="dash-card-value dash-card-status-active"><span class="status-dot"></span> Active</div></div>
+                    <div class="dash-card"><span class="dash-card-label">Subscription</span><span class="dash-card-value" id="dashSubType">Lifetime</span></div>
+                    <div class="dash-card"><span class="dash-card-label">Expires</span><span class="dash-card-value" id="dashExpiry">Never</span></div>
+                    <div class="dash-card"><span class="dash-card-label">HWID</span><span class="dash-card-value dash-card-hwid" id="dashHwid">Locked</span></div>
+                </div>
+                <div class="dash-section">
+                    <h3 class="dash-section-title">Quick Download</h3>
+                    <div class="dash-quick-download">
+                        <img src="logo.png" alt="Air DLC" class="dash-qd-logo">
+                        <div class="dash-qd-info"><span class="dash-qd-name">Air DLC Loader</span><span class="dash-qd-version">v2.0.1</span></div>
+                        <button class="btn-primary btn-sm" onclick="handleDownload()">Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- License -->
+            <div class="dash-tab" id="dashTab-license">
+                <h2 class="dash-tab-title">License</h2>
+                <div class="dash-section">
+                    <h3 class="dash-section-title">Your License Key</h3>
+                    <div class="license-display">
+                        <code class="license-key" id="dashLicenseKey">XXXX-XXXX</code>
+                        <button class="btn-icon" onclick="copyLicense()">Copy</button>
+                    </div>
+                </div>
+                <div class="dash-section">
+                    <h3 class="dash-section-title">Change Password</h3>
+                    <form class="dash-form" onsubmit="return handleChangePassword(event)">
+                        <input type="password" placeholder="Current password" required>
+                        <input type="password" placeholder="New password" required>
+                        <button type="submit" class="btn-secondary">Update</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Downloads -->
+            <div class="dash-tab" id="dashTab-downloads">
+                <h2 class="dash-tab-title">Downloads</h2>
+                <div class="dash-download-item">
+                    <div class="dash-download-info"><span class="dash-download-name">Air DLC Loader</span><span class="dash-download-meta">v2.0.1 &bull; 4.2 MB</span></div>
+                    <button class="btn-primary btn-sm" onclick="handleDownload()">Download</button>
+                </div>
+                <div class="dash-download-item">
+                    <div class="dash-download-info"><span class="dash-download-name">Air DLC Spoofer</span><span class="dash-download-meta">v1.4.0 &bull; 2.1 MB</span></div>
+                    <button class="btn-secondary btn-sm">Download</button>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="dash-tab" id="dashTab-settings-tab">
+                <h2 class="dash-tab-title">Settings</h2>
+                <div class="dash-section">
+                    <h3 class="dash-section-title">Profile</h3>
+                    <form class="dash-form" onsubmit="return handleUpdateProfile(event)">
+                        <input type="text" id="settingsUsername" placeholder="Username">
+                        <input type="email" id="settingsEmail" placeholder="Email">
+                        <button type="submit" class="btn-secondary">Save</button>
+                    </form>
+                </div>
+                <div class="dash-section">
+                    <h3 class="dash-section-title">Danger Zone</h3>
+                    <button class="btn-danger" onclick="handleDeleteAccount()">Delete Account</button>
+                </div>
+            </div>
+
+            <!-- Admin -->
+            <div class="dash-tab" id="dashTab-admin">
+                <h2 class="dash-tab-title">Admin Panel</h2>
+                <div class="dash-cards">
+                    <div class="dash-card"><span class="dash-card-label">Total Users</span><span class="dash-card-value" id="adminTotalUsers">0</span></div>
+                    <div class="dash-card"><span class="dash-card-label">Active Keys</span><span class="dash-card-value" id="adminActiveKeys">0</span></div>
+                    <div class="dash-card"><span class="dash-card-label">Used Keys</span><span class="dash-card-value" id="adminUsedKeys">0</span></div>
+                    <div class="dash-card"><span class="dash-card-label">Admin</span><span class="dash-card-value">kekainat</span></div>
+                </div>
+                <div class="dash-section">
+                    <h3 class="dash-section-title">Generate License Key</h3>
+                    <div class="admin-generate">
+                        <div class="admin-gen-row">
+                            <div class="form-field" style="flex:1"><label>Subscription Type</label><select id="adminSubType" class="admin-select"><option value="Lifetime">Lifetime</option><option value="1 Month">1 Month</option><option value="3 Months">3 Months</option><option value="6 Months">6 Months</option><option value="1 Year">1 Year</option></select></div>
+                            <div class="form-field" style="flex:1"><label>Key Prefix</label><input type="text" id="adminKeyPrefix" placeholder="AIR" maxlength="4"></div>
+                        </div>
+                        <button class="btn-primary" onclick="generateLicenseKey()">Generate Key</button>
+                        <div class="admin-generated-box" id="adminGeneratedBox" style="display:none"><span class="admin-generated-label">Key:</span><code class="admin-generated-key" id="adminGeneratedKey"></code><button class="btn-icon" onclick="copyAdminKey()">Copy</button></div>
+                    </div>
+                </div>
+                <div class="dash-section"><h3 class="dash-section-title">All License Keys</h3><div id="adminKeysList"><p class="admin-empty">No keys yet</p></div></div>
+                <div class="dash-section"><h3 class="dash-section-title">All Users</h3><div id="adminUsersList"><p class="admin-empty">No users</p></div></div>
+            </div>
+
+            <!-- Updates -->
+            <div class="dash-tab" id="dashTab-updates">
+                <h2 class="dash-tab-title">Updates</h2>
+                <div class="dash-section">
+                    <h3 class="dash-section-title">Upload Update</h3>
+                    <form class="dash-form" onsubmit="return uploadUpdate(event)">
+                        <input type="text" id="updateVersion" placeholder="Version (e.g. 1.21.11)" required>
+                        <select id="updateType" class="admin-select">
+                            <option value="release">Release</option>
+                            <option value="alpha">Alpha</option>
+                            <option value="beta">Beta</option>
+                        </select>
+                        <input type="text" id="updateNotes" placeholder="Notes (optional)">
+                        <input type="file" id="updateFile" required>
+                        <button type="submit" class="btn-primary" id="updateUploadBtn">Upload</button>
+                    </form>
+                </div>
+                <div class="dash-section">
+                    <h3 class="dash-section-title">All Updates</h3>
+                    <div id="adminUpdatesList"><p class="admin-empty">No updates yet</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-tabs"><button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button><button class="modal-tab" id="tabRegister" onclick="switchTab('register')">Sign Up</button></div>
+            <form class="auth-form" id="loginForm" onsubmit="return handleLogin(event)">
+                <div class="form-field"><label>Username</label><input type="text" id="loginUsername" placeholder="Username" required></div>
+                <div class="form-field"><label>Password</label><input type="password" id="loginPassword" placeholder="Password" required></div>
+                <button type="submit" class="btn-primary btn-full" id="loginBtn"><span>Sign In</span> <div class="btn-spinner" style="display:none"></div></button>
+                <p class="form-switch">No account? <a onclick="switchTab('register')">Sign Up</a></p>
+            </form>
+            <form class="auth-form" id="registerForm" style="display:none" onsubmit="return handleRegister(event)">
+                <div class="form-field"><label>Username</label><input type="text" id="regUsername" placeholder="Username" required></div>
+                <div class="form-field"><label>Email</label><input type="email" id="regEmail" placeholder="Email" required></div>
+                <div class="form-field"><label>Password</label><input type="password" id="regPassword" placeholder="Password" required></div>
+                <div class="form-field"><label>License Key</label><input type="text" id="regKey" placeholder="XXXX-XXXX-XXXX" required></div>
+                <button type="submit" class="btn-primary btn-full" id="regBtn"><span>Create Account</span> <div class="btn-spinner" style="display:none"></div></button>
+                <p class="form-switch">Have account? <a onclick="switchTab('login')">Sign In</a></p>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"><span id="toastText"></span></div>
+    <script src="script.js"></script>
+    <script>
+        if (!currentUser) { window.location.href = 'index.html'; }
+        else { updateDashboard(); if (isAdmin()) { updateAdminPanel(); loadUpdatesList(); } }
+    </script>
+</body>
+</html>

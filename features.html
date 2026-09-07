@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features — Air DLC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo"><img src="logo.png" alt="Air DLC" class="nav-logo-img"><span>Air DLC</span></a>
+            <div class="nav-center" id="navCenter">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="features.html" class="nav-link active">Features</a>
+                <a href="download.html" class="nav-link">Download</a>
+            </div>
+            <div class="nav-right" id="navRight">
+                <button class="nav-btn-outline" onclick="openModal('login')">Sign In</button>
+                <button class="nav-btn-fill" onclick="openModal('register')">Sign Up</button>
+            </div>
+            <div class="nav-right nav-right-auth" id="navRightAuth" style="display:none">
+                <a href="dashboard.html" class="nav-btn-outline">Dashboard</a>
+                <div class="nav-avatar" onclick="toggleProfileMenu()"><span id="navAvatarLetter">A</span></div>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="profile-dropdown-header"><span class="profile-dropdown-name" id="dropdownName">User</span><span class="profile-dropdown-email" id="dropdownEmail">email</span></div>
+                    <div class="profile-dropdown-divider"></div>
+                    <a class="profile-dropdown-item" href="dashboard.html">Dashboard</a>
+                    <div class="profile-dropdown-divider"></div>
+                    <a class="profile-dropdown-item profile-dropdown-logout" onclick="logout()">Log Out</a>
+                </div>
+            </div>
+            <button class="nav-burger" onclick="document.getElementById('navCenter').classList.toggle('mobile-open')"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <section class="page-section" style="padding-top:120px">
+        <div class="section-header">
+            <span class="section-tag">Features</span>
+            <h2 class="section-title">Everything you need</h2>
+            <p class="section-desc">Built for performance. Designed for stealth.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                <h3>Anti-Cheat Bypass</h3>
+                <p>Undetected by all major anti-cheat systems. Kernel-level protection bypass.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h.01M15 9h.01M9 15h6"/></svg></div>
+                <h3>HWID Spoofer</h3>
+                <p>Protect your hardware identifiers. Banned accounts stay banned, not your device.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+                <h3>Fast Injection</h3>
+                <p>Load into games in under 3 seconds. Minimal performance impact.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                <h3>Auto Updates</h3>
+                <p>Automatic updates push seamlessly. You always run the latest version.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                <h3>24/7 Support</h3>
+                <p>Active Discord support around the clock. Response within minutes.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+                <h3>Clean Overlay</h3>
+                <p>Minimalist in-game UI. Customizable. Toggle with one keybind.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer"><div class="footer-inner"><div class="footer-left"><img src="logo.png" alt="Air DLC" class="footer-logo-img"><span class="footer-brand">Air DLC</span></div><span class="footer-copy">&copy; 2026 Air DLC</span><div class="footer-links"><a href="#">Discord</a><a href="#">Telegram</a></div></div></footer>
+
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-tabs"><button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button><button class="modal-tab" id="tabRegister" onclick="switchTab('register')">Sign Up</button></div>
+            <form class="auth-form" id="loginForm" onsubmit="return handleLogin(event)">
+                <div class="form-field"><label>Username</label><input type="text" id="loginUsername" placeholder="Username" required></div>
+                <div class="form-field"><label>Password</label><input type="password" id="loginPassword" placeholder="Password" required></div>
+                <button type="submit" class="btn-primary btn-full" id="loginBtn"><span>Sign In</span> <div class="btn-spinner" style="display:none"></div></button>
+                <p class="form-switch">No account? <a onclick="switchTab('register')">Sign Up</a></p>
+            </form>
+            <form class="auth-form" id="registerForm" style="display:none" onsubmit="return handleRegister(event)">
+                <div class="form-field"><label>Username</label><input type="text" id="regUsername" placeholder="Username" required></div>
+                <div class="form-field"><label>Email</label><input type="email" id="regEmail" placeholder="Email" required></div>
+                <div class="form-field"><label>Password</label><input type="password" id="regPassword" placeholder="Password" required></div>
+                <div class="form-field"><label>License Key</label><input type="text" id="regKey" placeholder="XXXX-XXXX-XXXX" required></div>
+                <button type="submit" class="btn-primary btn-full" id="regBtn"><span>Create Account</span> <div class="btn-spinner" style="display:none"></div></button>
+                <p class="form-switch">Have account? <a onclick="switchTab('login')">Sign In</a></p>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"><span id="toastText"></span></div>
+    <script src="script.js"></script>
+</body>
+</html>

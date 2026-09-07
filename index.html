@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air DLC — Premium Cheat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo"><img src="logo.png" alt="Air DLC" class="nav-logo-img"><span>Air DLC</span></a>
+            <div class="nav-center" id="navCenter">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="features.html" class="nav-link">Features</a>
+                <a href="download.html" class="nav-link">Download</a>
+            </div>
+            <div class="nav-right" id="navRight">
+                <button class="nav-btn-outline" onclick="openModal('login')">Sign In</button>
+                <button class="nav-btn-fill" onclick="openModal('register')">Sign Up</button>
+            </div>
+            <div class="nav-right nav-right-auth" id="navRightAuth" style="display:none">
+                <a href="dashboard.html" class="nav-btn-outline">Dashboard</a>
+                <div class="nav-avatar" onclick="toggleProfileMenu()"><span id="navAvatarLetter">A</span></div>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="profile-dropdown-header"><span class="profile-dropdown-name" id="dropdownName">User</span><span class="profile-dropdown-email" id="dropdownEmail">email</span></div>
+                    <div class="profile-dropdown-divider"></div>
+                    <a class="profile-dropdown-item" href="dashboard.html">Dashboard</a>
+                    <div class="profile-dropdown-divider"></div>
+                    <a class="profile-dropdown-item profile-dropdown-logout" onclick="logout()">Log Out</a>
+                </div>
+            </div>
+            <button class="nav-burger" onclick="document.getElementById('navCenter').classList.toggle('mobile-open')"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-badge">AIR DLC v2.0 — UNDETECTED</div>
+        <h1 class="hero-title">The most powerful<br><span class="gradient-text">cheat for SpookyTime</span></h1>
+        <p class="hero-desc">Bypass any anti-cheat. HWID spoofer included. Instant injection. Always updated.</p>
+        <div class="hero-actions">
+            <a href="download.html" class="btn-primary">Download Loader</a>
+            <a href="features.html" class="btn-secondary">Learn More</a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat"><span class="hero-stat-num" data-target="12847">0</span><span class="hero-stat-label">Active users</span></div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat"><span class="hero-stat-num" data-target="99.8">0</span><span class="hero-stat-label">% Uptime</span></div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat"><span class="hero-stat-num" data-target="3">0</span><span class="hero-stat-label">Sec injection</span></div>
+        </div>
+    </section>
+
+    <section class="hero-preview">
+        <div class="preview-window">
+            <div class="preview-header"><div class="preview-dots"><span></span><span></span><span></span></div><span class="preview-title">Air DLC Loader</span></div>
+            <div class="preview-body">
+                <img src="logo.png" alt="Air DLC" class="preview-logo">
+                <div class="preview-status"><div class="preview-status-dot"></div> Connected to SpookyTime</div>
+                <div class="preview-bar"><div class="preview-bar-fill"></div></div>
+                <span class="preview-bar-text">Injection ready</span>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer"><div class="footer-inner"><div class="footer-left"><img src="logo.png" alt="Air DLC" class="footer-logo-img"><span class="footer-brand">Air DLC</span></div><span class="footer-copy">&copy; 2026 Air DLC</span><div class="footer-links"><a href="#">Discord</a><a href="#">Telegram</a></div></div></footer>
+
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-tabs"><button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button><button class="modal-tab" id="tabRegister" onclick="switchTab('register')">Sign Up</button></div>
+            <form class="auth-form" id="loginForm" onsubmit="return handleLogin(event)">
+                <div class="form-field"><label>Username</label><input type="text" id="loginUsername" placeholder="Username" required></div>
+                <div class="form-field"><label>Password</label><input type="password" id="loginPassword" placeholder="Password" required></div>
+                <button type="submit" class="btn-primary btn-full" id="loginBtn"><span>Sign In</span> <div class="btn-spinner" style="display:none"></div></button>
+                <p class="form-switch">No account? <a onclick="switchTab('register')">Sign Up</a></p>
+            </form>
+            <form class="auth-form" id="registerForm" style="display:none" onsubmit="return handleRegister(event)">
+                <div class="form-field"><label>Username</label><input type="text" id="regUsername" placeholder="Username" required></div>
+                <div class="form-field"><label>Email</label><input type="email" id="regEmail" placeholder="Email" required></div>
+                <div class="form-field"><label>Password</label><input type="password" id="regPassword" placeholder="Password" required></div>
+                <div class="form-field"><label>License Key</label><input type="text" id="regKey" placeholder="XXXX-XXXX-XXXX" required></div>
+                <button type="submit" class="btn-primary btn-full" id="regBtn"><span>Create Account</span> <div class="btn-spinner" style="display:none"></div></button>
+                <p class="form-switch">Have account? <a onclick="switchTab('login')">Sign In</a></p>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"><span id="toastText"></span></div>
+    <script src="script.js"></script>
+</body>
+</html>
