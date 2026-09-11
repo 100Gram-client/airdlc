@@ -3,93 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Air DLC — Premium Cheat</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <title>Сайт обновляется</title>
+    <!-- Подключаем иконки FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #000;
+            --bg2: #0a0a0a;
+            --bg3: #111;
+            --surface2: rgba(255, 255, 255, .06);
+            --border: rgba(255, 255, 255, .08);
+            --border2: rgba(255, 255, 255, .12);
+            --text: #fff;
+            --text2: rgba(255, 255, 255, .7);
+            --text3: rgba(255, 255, 255, .4);
+            --green: #22c55e;
+            --red: #ef4444;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --radius-lg: 16px;
+            --transition: all .2s ease;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Главная карточка */
+        .preview-window {
+            width: 100%;
+            max-width: 550px;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .preview-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg3);
+        }
+
+        .preview-dots { display: flex; gap: 6px; }
+        .preview-dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--surface2); }
+        .preview-dots span:nth-child(1) { background: #ef4444; }
+        .preview-dots span:nth-child(2) { background: #eab308; }
+        .preview-dots span:nth-child(3) { background: #22c55e; }
+
+        .preview-title { font-size: .75rem; color: var(--text3); }
+
+        .preview-body { padding: 48px 32px; text-align: center; }
+
+        /* Бейдж статуса */
+        .preview-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 100px;
+            background: var(--surface2);
+            font-size: .8rem;
+            color: var(--text2);
+            margin-bottom: 24px;
+            border: 1px solid var(--border2);
+        }
+
+        .preview-status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 8px rgba(34, 197, 94, .5);
+        }
+
+        /* Иконка / Анимация */
+        .preview-logo {
+            font-size: 3rem;
+            margin: 0 auto 24px;
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .preview-logo i.fa-gear {
+            animation: spin 6s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Тексты */
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -.03em;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #fff, rgba(255, 255, 255, .5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            font-size: .95rem;
+            color: var(--text2);
+            line-height: 1.6;
+            margin-bottom: 32px;
+            max-width: 440px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Прогресс-бар */
+        .progress-box {
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .preview-bar {
+            height: 4px;
+            background: var(--surface2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .preview-bar-fill {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--green), rgba(34, 197, 94, .3));
+            border-radius: 2px;
+            animation: barPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes barPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .4; }
+        }
+
+        .preview-bar-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: .7rem;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        /* Таймер */
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .timer-item {
+            padding: 12px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            min-width: 70px;
+        }
+
+        .timer-number {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .timer-label {
+            font-size: .65rem;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            margin-top: 2px;
+        }
+
+        /* Форма подписки */
+        .dash-form {
+            display: flex;
+            gap: 8px;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .dash-form input {
+            flex: 1;
+            padding: 10px 14px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-size: .875rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .dash-form input::placeholder { color: var(--text3); }
+        .dash-form input:focus { border-color: rgba(255, 255, 255, .25); }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--text);
+            color: var(--bg);
+            font-size: .875rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .btn-primary:hover {
+            opacity: .85;
+            transform: translateY(-1px);
+        }
+
+        @media(max-width: 500px) {
+            .preview-body { padding: 32px 20px; }
+            .dash-form { flex-direction: column; }
+            .btn-primary { width: 100%; justify-content: center; }
+            .timer { gap: 8px; }
+            .timer-item { min-width: 55px; padding: 8px; }
+            .timer-number { font-size: 1.1rem; }
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-inner">
-            <a href="index.html" class="nav-logo"><img src="logo.png" alt="Air DLC" class="nav-logo-img"><span>Air DLC</span></a>
-            <div class="nav-center" id="navCenter">
-                <a href="index.html" class="nav-link active">Home</a>
-                <a href="features.html" class="nav-link">Features</a>
-                <a href="download.html" class="nav-link">Download</a>
+
+    <div class="preview-window">
+        <div class="preview-header">
+            <div class="preview-dots">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
-            <div class="nav-right" id="navRight">
-                <button class="nav-btn-outline" onclick="openModal('login')">Sign In</button>
-                <button class="nav-btn-fill" onclick="openModal('register')">Sign Up</button>
+            <div class="preview-title">system / maintenance_mode</div>
+        </div>
+
+        <div class="preview-body">
+            <div class="preview-status">
+                <span class="preview-status-dot"></span>
+                Техническое обслуживание
             </div>
-            <div class="nav-right nav-right-auth" id="navRightAuth" style="display:none">
-                <a href="dashboard.html" class="nav-btn-outline">Dashboard</a>
-                <div class="nav-avatar" onclick="toggleProfileMenu()"><span id="navAvatarLetter">A</span></div>
-                <div class="profile-dropdown" id="profileDropdown">
-                    <div class="profile-dropdown-header"><span class="profile-dropdown-name" id="dropdownName">User</span><span class="profile-dropdown-email" id="dropdownEmail">email</span></div>
-                    <div class="profile-dropdown-divider"></div>
-                    <a class="profile-dropdown-item" href="dashboard.html">Dashboard</a>
-                    <div class="profile-dropdown-divider"></div>
-                    <a class="profile-dropdown-item profile-dropdown-logout" onclick="logout()">Log Out</a>
+
+            <div class="preview-logo">
+                <i class="fa-solid fa-gear"></i>
+            </div>
+
+            <h1>Сайт обновляется</h1>
+            <p>Прямо сейчас мы внедряем новые функции и проводим оптимизацию системы. Скоро вернемся в строй!</p>
+
+            <!-- Шкала прогресса -->
+            <div class="progress-box">
+                <div class="preview-bar">
+                    <div class="preview-bar-fill"></div>
+                </div>
+                <div class="preview-bar-text">
+                    <span>Статус обновления</span>
+                    <span>В процессе</span>
                 </div>
             </div>
-            <button class="nav-burger" onclick="document.getElementById('navCenter').classList.toggle('mobile-open')"><span></span><span></span><span></span></button>
-        </div>
-    </nav>
 
-    <section class="hero">
-        <div class="hero-badge">AIR DLC v2.0 — UNDETECTED</div>
-        <h1 class="hero-title">The most powerful<br><span class="gradient-text">cheat for SpookyTime</span></h1>
-        <p class="hero-desc">Bypass any anti-cheat. HWID spoofer included. Instant injection. Always updated.</p>
-        <div class="hero-actions">
-            <a href="download.html" class="btn-primary">Download Loader</a>
-            <a href="features.html" class="btn-secondary">Learn More</a>
-            <a href="https://t.me/airdlcbot" target="_blank" class="btn-secondary" style="background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:#22c55e">Get Free Key via Bot</a>
-        </div>
-        <p style="margin-top:16px;font-size:.8rem;color:var(--text3)">🔑 Бесплатный ключ в <a href="https://t.me/airdlcbot" target="_blank" style="color:#22c55e;text-decoration:underline">Telegram боте</a> — подпишись на <a href="https://t.me/dlc_airclient" target="_blank" style="color:var(--text2);text-decoration:underline">@dlc_airclient</a> и нажми /start</p>
-        <div class="hero-stats">
-            <div class="hero-stat"><span class="hero-stat-num" data-target="12847">0</span><span class="hero-stat-label">Active users</span></div>
-            <div class="hero-stat-divider"></div>
-            <div class="hero-stat"><span class="hero-stat-num" data-target="99.8">0</span><span class="hero-stat-label">% Uptime</span></div>
-            <div class="hero-stat-divider"></div>
-            <div class="hero-stat"><span class="hero-stat-num" data-target="3">0</span><span class="hero-stat-label">Sec injection</span></div>
-        </div>
-    </section>
-
-    <section class="hero-preview">
-        <div class="preview-window">
-            <div class="preview-header"><div class="preview-dots"><span></span><span></span><span></span></div><span class="preview-title">Air DLC Loader</span></div>
-            <div class="preview-body">
-                <img src="logo.png" alt="Air DLC" class="preview-logo">
-                <div class="preview-status"><div class="preview-status-dot"></div> Connected to SpookyTime</div>
-                <div class="preview-bar"><div class="preview-bar-fill"></div></div>
-                <span class="preview-bar-text">Injection ready</span>
+            <!-- Обратный отсчет -->
+            <div class="timer">
+                <div class="timer-item">
+                    <div class="timer-number" id="hours">02</div>
+                    <div class="timer-label">Часов</div>
+                </div>
+                <div class="timer-item">
+                    <div class="timer-number" id="minutes">45</div>
+                    <div class="timer-label">Минут</div>
+                </div>
+                <div class="timer-item">
+                    <div class="timer-number" id="seconds">00</div>
+                    <div class="timer-label">Секунд</div>
+                </div>
             </div>
-        </div>
-    </section>
 
-    <footer class="footer"><div class="footer-inner"><div class="footer-left"><img src="logo.png" alt="Air DLC" class="footer-logo-img"><span class="footer-brand">Air DLC</span></div><span class="footer-copy">&copy; 2026 Air DLC</span><div class="footer-links"><a href="https://t.me/airdlcbot" target="_blank">Bot</a><a href="https://t.me/dlc_airclient" target="_blank">Telegram</a></div></div></footer>
-
-    <div class="modal-overlay" id="authModal">
-        <div class="modal">
-            <button class="modal-close" onclick="closeModal()">&times;</button>
-            <div class="modal-tabs"><button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button><button class="modal-tab" id="tabRegister" onclick="switchTab('register')">Sign Up</button></div>
-            <form class="auth-form" id="loginForm" onsubmit="return handleLogin(event)">
-                <div class="form-field"><label>Username</label><input type="text" id="loginUsername" placeholder="Username" required></div>
-                <div class="form-field"><label>Password</label><input type="password" id="loginPassword" placeholder="Password" required></div>
-                <button type="submit" class="btn-primary btn-full" id="loginBtn"><span>Sign In</span> <div class="btn-spinner" style="display:none"></div></button>
-                <p class="form-switch">No account? <a onclick="switchTab('register')">Sign Up</a></p>
-            </form>
-            <form class="auth-form" id="registerForm" style="display:none" onsubmit="return handleRegister(event)">
-                <div class="form-field"><label>Username</label><input type="text" id="regUsername" placeholder="Username" required></div>
-                <div class="form-field"><label>Email</label><input type="email" id="regEmail" placeholder="Email" required></div>
-                <div class="form-field"><label>Password</label><input type="password" id="regPassword" placeholder="Password" required></div>
-                <div class="form-field"><label>License Key</label><input type="text" id="regKey" placeholder="XXXX-XXXX-XXXX" required></div>
-                <button type="submit" class="btn-primary btn-full" id="regBtn"><span>Create Account</span> <div class="btn-spinner" style="display:none"></div></button>
-                <p class="form-switch">Have account? <a onclick="switchTab('login')">Sign In</a></p>
+            <!-- Форма уведомления -->
+            <form class="dash-form" onsubmit="event.preventDefault(); alert('Спасибо! Мы уведомим вас после запуска.');">
+                <input type="email" placeholder="Введите ваш e-mail" required>
+                <button type="submit" class="btn-primary">Уведомить</button>
             </form>
         </div>
     </div>
 
-    <div class="toast" id="toast"><span id="toastText"></span></div>
-    <script src="script.js"></script>
+    <script>
+        let totalSeconds = 2 * 3600 + 45 * 60; 
+
+        function updateTimer() {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
+            document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+
+            if (totalSeconds > 0) {
+                totalSeconds--;
+            }
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
 </body>
 </html>
