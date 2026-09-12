@@ -1,0 +1,8 @@
+node_modules/
+.env
+data.json
+tokens.json
+updates.json
+updates/
+chat.json
+support.json

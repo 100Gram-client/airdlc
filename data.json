@@ -1,0 +1,66 @@
+{
+  "users": [
+    {
+      "username": "kekainat",
+      "email": "admin@airdlc.me",
+      "password": "kekainat",
+      "key": "ADMIN-PANEL",
+      "subType": "Lifetime",
+      "expiry": "Never",
+      "hwid": "ADMIN-HWID",
+      "joinDate": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "username": "kolor_2x",
+      "email": "momik7774@gmail.com",
+      "password": "15975326845",
+      "key": "AIR-6FTN-QTRQ-Z5S1",
+      "subType": "Lifetime",
+      "expiry": "Never",
+      "hwid": "HWID-F1EAOYVE-MRP2",
+      "joinDate": "2026-09-11T13:33:32.762Z"
+    }
+  ],
+  "keys": [
+    {
+      "key": "AIR-TEST-KEY1-2024",
+      "subType": "Lifetime",
+      "used": false,
+      "usedBy": null,
+      "usedDate": null,
+      "createdBy": "kekainat",
+      "createdDate": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "key": "AIR-DEMO-XXXX-9999",
+      "subType": "1 Month",
+      "used": false,
+      "usedBy": null,
+      "usedDate": null,
+      "createdBy": "kekainat",
+      "createdDate": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "key": "AIR-PREM-ABCD-7777",
+      "subType": "3 Months",
+      "used": false,
+      "usedBy": null,
+      "usedDate": null,
+      "createdBy": "kekainat",
+      "createdDate": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "key": "AIR-6FTN-QTRQ-Z5S1",
+      "subType": "Lifetime",
+      "used": true,
+      "usedBy": "kolor_2x",
+      "usedDate": "2026-09-11T13:33:32.761Z",
+      "createdBy": "telegram_bot",
+      "createdDate": "2026-09-11T13:21:33.488Z",
+      "telegramId": null,
+      "telegramUsername": ""
+    }
+  ],
+  "seeded": true,
+  "telegramIssued": {}
+}
