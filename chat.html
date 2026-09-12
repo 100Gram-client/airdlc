@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat — Air DLC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo"><img src="logo.png" alt="Air DLC" class="nav-logo-img"><span>Air DLC</span></a>
+            <div class="nav-center" id="navCenter">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="features.html" class="nav-link">Features</a>
+                <a href="download.html" class="nav-link">Download</a>
+                <a href="chat.html" class="nav-link active">Chat</a>
+            </div>
+            <div class="nav-right" id="navRight" style="display:none">
+                <button class="nav-btn-outline" onclick="openModal('login')">Sign In</button>
+                <button class="nav-btn-fill" onclick="openModal('register')">Sign Up</button>
+            </div>
+            <div class="nav-right nav-right-auth" id="navRightAuth" style="display:none">
+                <a href="dashboard.html" class="nav-btn-outline">Dashboard</a>
+                <div class="nav-avatar" onclick="toggleProfileMenu()"><span id="navAvatarLetter">A</span></div>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="profile-dropdown-header"><span class="profile-dropdown-name" id="dropdownName">User</span><span class="profile-dropdown-email" id="dropdownEmail">email</span></div>
+                    <div class="profile-dropdown-divider"></div>
+                    <a class="profile-dropdown-item" href="dashboard.html">Dashboard</a>
+                    <a class="profile-dropdown-item" href="chat.html">Chat</a>
+                    <div class="profile-dropdown-divider"></div>
+                    <a class="profile-dropdown-item profile-dropdown-logout" onclick="logout()">Log Out</a>
+                </div>
+            </div>
+            <button class="nav-burger" onclick="document.getElementById('navCenter').classList.toggle('mobile-open')"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <div class="chat-layout">
+        <div class="chat-sidebar">
+            <div class="chat-sidebar-header">
+                <h3>Online</h3><span class="chat-online-count" id="chatOnlineCount">0</span>
+            </div>
+            <div class="chat-users" id="chatUsersList"><p class="admin-empty">Loading...</p></div>
+            <div class="chat-sidebar-footer">
+                <div class="chat-rules">
+                    <strong>Правила:</strong> без спама, без оскорблений. Админ может удалить чат.
+                </div>
+                <button class="btn-danger" id="chatClearBtn" onclick="clearChat()" style="display:none;width:100%;margin-top:12px;">🗑 Clear (admin)</button>
+            </div>
+        </div>
+
+        <div class="chat-main">
+            <div class="chat-header">
+                <div class="chat-header-left">
+                    <div class="chat-header-dot"></div>
+                    <span>Global Chat</span><span class="chat-header-hint">общий чат всех пользователей</span>
+                </div>
+                <div class="chat-header-right">
+                    <span class="chat-msg-count" id="chatMsgCount">0 msgs</span>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-empty" id="chatEmpty">Загрузка сообщений...</div>
+            </div>
+
+            <div class="chat-input-area" id="chatInputArea">
+                <div class="chat-need-login" id="chatNeedLogin" style="display:none;">
+                    <span>Войди чтобы писать</span>
+                    <button class="nav-btn-fill" onclick="openModal('login')">Sign In</button>
+                </div>
+                <form class="chat-form" id="chatForm" onsubmit="return sendMessage(event)" style="display:none;">
+                    <input type="text" id="chatInput" placeholder="Напиши сообщение..." autocomplete="off" maxlength="500">
+                    <button type="submit" class="btn-primary btn-sm" id="chatSendBtn">Send</button>
+                </form>
+                <div class="chat-char-count"><span id="chatCharCount">0</span>/500</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-tabs"><button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button><button class="modal-tab" id="tabRegister" onclick="switchTab('register')">Sign Up</button></div>
+            <form class="auth-form" id="loginForm" onsubmit="return handleLogin(event)">
+                <div class="form-field"><label>Username</label><input type="text" id="loginUsername" placeholder="Username" required></div>
+                <div class="form-field"><label>Password</label><input type="password" id="loginPassword" placeholder="Password" required></div>
+                <button type="submit" class="btn-primary btn-full" id="loginBtn"><span>Sign In</span> <div class="btn-spinner" style="display:none"></div></button>
+                <p class="form-switch">No account? <a onclick="switchTab('register')">Sign Up</a></p>
+            </form>
+            <form class="auth-form" id="registerForm" style="display:none" onsubmit="return handleRegister(event)">
+                <div class="form-field"><label>Username</label><input type="text" id="regUsername" placeholder="Username" required></div>
+                <div class="form-field"><label>Email</label><input type="email" id="regEmail" placeholder="Email" required></div>
+                <div class="form-field"><label>Password</label><input type="password" id="regPassword" placeholder="Password" required></div>
+                <div class="form-field"><label>License Key</label><input type="text" id="regKey" placeholder="XXXX-XXXX-XXXX" required></div>
+                <button type="submit" class="btn-primary btn-full" id="regBtn"><span>Create Account</span> <div class="btn-spinner" style="display:none"></div></button>
+                <p class="form-switch">Have account? <a onclick="switchTab('login')">Sign In</a></p>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"><span id="toastText"></span></div>
+    <script src="script.js"></script>
+    <script>
+        // Chat logic
+        let chatMessages = [];
+        let lastTs = 0;
+        let chatPollTimer = null;
+        const chatEl = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const charCount = document.getElementById('chatCharCount');
+
+        function esc(s){
+            const d=document.createElement('div');
+            d.textContent=s;
+            return d.innerHTML;
+        }
+        function fmtTime(ts){
+            const d=new Date(ts);
+            return d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})+' '+d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'});
+        }
+        function renderMessages(append){
+            if(chatMessages.length===0){
+                document.getElementById('chatEmpty').style.display='block';
+                document.getElementById('chatEmpty').textContent='Пока нет сообщений. Напиши первым!';
+                return;
+            }
+            document.getElementById('chatEmpty').style.display='none';
+            // if append mode, only append new
+            if(append && append.length){
+                append.forEach(m=> chatEl.appendChild(createMsgEl(m)));
+            } else {
+                chatEl.innerHTML='';
+                chatMessages.forEach(m=> chatEl.appendChild(createMsgEl(m)));
+            }
+            chatEl.scrollTop = chatEl.scrollHeight;
+            document.getElementById('chatMsgCount').textContent = chatMessages.length+' msgs';
+        }
+        function createMsgEl(m){
+            const div=document.createElement('div');
+            div.className='chat-msg'+(m.admin?' admin':'')+(m.user===currentUser?' own':'');
+            const isOwn = m.user===currentUser;
+            div.innerHTML = `
+                <div class="chat-msg-avatar">${esc(m.user[0].toUpperCase())}</div>
+                <div class="chat-msg-body">
+                    <div class="chat-msg-head"><span class="chat-msg-user">${esc(m.user)}${m.admin?' <span class=\"chat-admin-badge\">ADMIN</span>':''} ${m.subType && m.subType!=='User' ? '<span class=\"chat-sub-badge\">'+esc(m.subType)+'</span>':''}</span><span class="chat-msg-time">${fmtTime(m.ts)}</span></div>
+                    <div class="chat-msg-text">${esc(m.text)}</div>
+                </div>
+            `;
+            return div;
+        }
+        async function fetchChat(initial){
+            try{
+                const url = initial ? '/api/chat?limit=100' : '/api/chat?since='+lastTs;
+                const r = await fetch(url);
+                const data = await r.json();
+                if(Array.isArray(data)){
+                    if(initial){
+                        chatMessages = data;
+                        if(data.length) lastTs = data[data.length-1].ts;
+                        renderMessages();
+                    } else if(data.length){
+                        // new messages
+                        data.forEach(m=>{
+                            if(!chatMessages.find(x=>x.id===m.id)){
+                                chatMessages.push(m);
+                                if(chatMessages.length>500) chatMessages.shift();
+                            }
+                        });
+                        if(data.length) lastTs = data[data.length-1].ts;
+                        renderMessages(data);
+                    }
+                }
+            }catch(e){ console.error('chat fetch',e); }
+        }
+        async function fetchOnline(){
+            try{
+                const r=await fetch('/api/chat/online');
+                const j=await r.json();
+                const el=document.getElementById('chatUsersList');
+                const cnt=document.getElementById('chatOnlineCount');
+                if(cnt) cnt.textContent=j.total||0;
+                if(j.users && j.users.length){
+                    el.innerHTML = j.users.map(u=>`
+                        <div class="chat-user ${u.admin?'admin':''}">
+                            <div class="chat-user-avatar">${esc(u.username[0].toUpperCase())}</div>
+                            <span class="chat-user-name">${esc(u.username)}</span>
+                            ${u.admin?'<span class=\"chat-admin-badge sm\">ADM</span>':''}
+                            <span class="chat-user-sub">${esc(u.subType||'User')}</span>
+                        </div>
+                    `).join('');
+                } else el.innerHTML='<p class=\"admin-empty\">No users</p>';
+                // show clear btn for admin
+                const clearBtn=document.getElementById('chatClearBtn');
+                if(clearBtn) clearBtn.style.display = isAdmin() ? 'block' : 'none';
+            }catch{}
+        }
+        async function sendMessage(e){
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if(!text) return false;
+            if(!currentUser){ toast('Sign in first','error'); openModal('login'); return false; }
+            if(text.length>500){ toast('Too long','error'); return false; }
+            const btn=document.getElementById('chatSendBtn');
+            btn.disabled=true; btn.textContent='...';
+            try{
+                // try to get token from localStorage if exists (for future)
+                const token = localStorage.getItem('airdlc_token') || '';
+                const r=await fetch('/api/chat',{method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username: currentUser, text, token})});
+                const j=await r.json();
+                if(!r.ok) throw new Error(j.error||'Failed');
+                chatInput.value=''; charCount.textContent='0';
+                // optimistically add
+                await fetchChat();
+            }catch(err){
+                toast(err.message||'Send failed','error');
+            } finally { btn.disabled=false; btn.textContent='Send'; }
+            return false;
+        }
+        async function clearChat(){
+            if(!confirm('Clear all messages?')) return;
+            const token=localStorage.getItem('airdlc_token')||'';
+            const r=await fetch('/api/chat/clear',{method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username: currentUser, token})});
+            const j=await r.json();
+            if(j.ok){ toast('Cleared','success'); chatMessages=[]; lastTs=0; renderMessages(); fetchChat(true); }
+            else toast(j.error||'Failed','error');
+        }
+        chatInput.addEventListener('input', ()=>{ charCount.textContent = chatInput.value.length; });
+        chatInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(e); }});
+
+        function updateChatAuth(){
+            const need=document.getElementById('chatNeedLogin');
+            const form=document.getElementById('chatForm');
+            if(currentUser){
+                need.style.display='none';
+                form.style.display='flex';
+            } else {
+                need.style.display='flex';
+                form.style.display='none';
+            }
+        }
+        // hook into existing auth
+        const _origUpdateAuth = window.updateAuthUI;
+        window.updateAuthUI = function(){
+            if(typeof _origUpdateAuth==='function') _origUpdateAuth();
+            updateChatAuth();
+            fetchOnline();
+        };
+
+        // init
+        (function initChat(){
+            updateChatAuth();
+            fetchChat(true);
+            fetchOnline();
+            chatPollTimer=setInterval(()=>{ fetchChat(false); }, 2000);
+            setInterval(fetchOnline, 10000);
+            // scroll on load
+            setTimeout(()=> chatEl.scrollTop=chatEl.scrollHeight, 500);
+        })();
+    </script>
+</body>
+</html>
