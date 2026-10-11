@@ -1,5 +1,6 @@
 const http=require('http'),fs=require('fs'),path=require('path'),crypto=require('crypto');
 const storage=require('./storage');
+const cloudconfig=require('./cloudconfig');
 const PORT=process.env.PORT||8080,__dir=__dirname;
 const DF=storage.DF, TF=storage.TF, UF=storage.UF, UD=storage.UD, CF=storage.CF, SF=storage.SF;
 const rd=storage.rd, wd=storage.wd, rt=storage.rt, wt=storage.wt, ru=storage.ru, wu=storage.wu, rc=storage.rc, wc=storage.wc, rs=storage.rs, ws=storage.ws;
@@ -136,8 +137,12 @@ function seed(d){
 function mp(buf,bnd){let r={fields:{},file:null},bb=Buffer.from('--'+bnd),ps=[],s=0;while(true){let i=buf.indexOf(bb,s);if(i===-1)break;if(s>0)ps.push(buf.slice(s,i-2));s=i+bb.length}ps.forEach(p=>{let he=p.indexOf('\r\n\r\n');if(he===-1)return;let h=p.slice(0,he).toString(),b=p.slice(he+4);if(b.length>=2&&b[b.length-2]===13&&b[b.length-1]===10)b=b.slice(0,-2);let nm=h.match(/name="([^"]+)"/),fm=h.match(/filename="([^"]+)"/);if(nm){if(fm)r.file={fieldname:nm[1],filename:fm[1],data:b};else r.fields[nm[1]]=b.toString()}});return r}
 function js(res,code,obj){res.writeHead(code,{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});res.end(JSON.stringify(obj))}
 function findUser(users,inp){return users.find(x=>x.username.toLowerCase()===inp.username.toLowerCase()&&x.password===inp.password)}
-http.createServer((req,res)=>{let url=req.url.split('?')[0],qs=req.url.split('?')[1]||'',params={};qs.split('&').forEach(p=>{let kv=p.split('=');if(kv[0])params[decodeURIComponent(kv[0])]=decodeURIComponent(kv[1]||'')});
+http.createServer(async (req,res)=>{
+let url=req.url.split('?')[0],qs=req.url.split('?')[1]||'',params={};qs.split('&').forEach(p=>{let kv=p.split('=');if(kv[0])params[decodeURIComponent(kv[0])]=decodeURIComponent(kv[1]||'')});
 
+// === Cloud Config API (device auth + конфиги) ===
+const ccHandled = await cloudconfig.handle(req,res,url,params);
+if (ccHandled) return;
 // === Telegram webhook (для бесплатного тарифа — просыпает спящий инстанс, надежнее polling) ===
 if(url==='/api/telegram/webhook'&&req.method==='POST'){
   return rb(req, async b=>{
@@ -482,7 +487,9 @@ if(url==='/api/support/reply'&&req.method==='POST'){
     }catch(e){ js(res,400,{error:e.message}); }
   });
 }
+if(res.headersSent)return;
 let fp=path.join(__dir,url==='/'?'index.html':url),ext=path.extname(fp);
+if(/^\/(server|storage|bot|cloudconfig)\.js$/i.test(url)){js(res,404,{error:'Not found'});return}
 fs.readFile(fp,(e,d)=>{if(e)fs.readFile(path.join(__dir,'index.html'),(_,h)=>{res.writeHead(200,{'Content-Type':'text/html'});res.end(h)});else{res.writeHead(200,{'Content-Type':MIME[ext]||'application/octet-stream'});res.end(d)}})}).listen(PORT, async ()=>{
   // Восстановление с Upstash/Gist для бесплатного тарифа (если настроено)
   try{

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air DLC — Premium Client</title>
+    <meta name="description" content="Air DLC — премиальный чит для SpookyTime. Undetected, HWID spoofer, авто-обновления.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-effects"><div class="grid-bg"></div></div>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo"><img src="logo.png" alt="Air DLC" class="nav-logo-img"><span>Air DLC</span></a>
+            <div class="nav-center" id="navCenter">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="features.html" class="nav-link">Features</a>
+                <a href="download.html" class="nav-link">Download</a>
+                <a href="cloud.html" class="nav-link">Cloud</a>
+                <a href="support.html" class="nav-link">Support</a>
+                <a href="chat.html" class="nav-link">Chat</a>
+            </div>
+            <div class="nav-right" id="navRight">
+                <button class="nav-btn-outline" onclick="openModal('login')">Sign In</button>
+                <button class="nav-btn-fill" onclick="openModal('register')">Sign Up</button>
+            </div>
+            <div class="nav-right nav-right-auth" id="navRightAuth" style="display:none">
+                <a href="dashboard.html" class="nav-btn-outline">Dashboard</a>
+                <div class="nav-avatar" onclick="toggleProfileMenu()"><span id="navAvatarLetter">A</span></div>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="profile-dropdown-header"><span class="profile-dropdown-name" id="dropdownName">User</span><span class="profile-dropdown-email" id="dropdownEmail">email</span></div>
+                    <div class="profile-dropdown-divider"></div>
+                    <a class="profile-dropdown-item" href="dashboard.html">Dashboard</a>
+                    <a class="profile-dropdown-item" href="chat.html">Chat</a>
+                    <div class="profile-dropdown-divider"></div>
+                    <a class="profile-dropdown-item profile-dropdown-logout" onclick="logout()">Log Out</a>
+                </div>
+            </div>
+            <button class="nav-burger" onclick="document.getElementById('navCenter').classList.toggle('mobile-open')"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-badge"><span class="hero-badge-dot"></span> Air DLC v2.0 — Undetected</div>
+        <h1 class="hero-title">Самый мощный<br><span class="gradient-text">чит для SpookyTime</span></h1>
+        <p class="hero-desc">Обходит любой античит. HWID spoofer в комплекте. Мгновенная инжекция. Всегда актуален.</p>
+        <div class="hero-actions">
+            <a href="download.html" class="btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Скачать Loader
+            </a>
+            <a href="features.html" class="btn-secondary">Возможности</a>
+            <a href="https://t.me/airdlcbot" target="_blank" class="btn-secondary">Получить ключ</a>
+        </div>
+        <p style="margin-top:8px;font-size:.8rem;color:var(--text-tertiary)">🔑 Бесплатный ключ — <a href="https://t.me/airdlcbot" target="_blank" style="color:var(--accent);text-decoration:underline;text-underline-offset:3px">@airdlcbot</a> · подписка на <a href="https://t.me/dlc_airclient" target="_blank" style="color:var(--text-secondary);text-decoration:underline;text-underline-offset:3px">@dlc_airclient</a></p>
+        <div class="hero-stats">
+            <div class="hero-stat"><span class="hero-stat-num" data-target="12847">0</span><span class="hero-stat-label">Active users</span></div>
+            <div class="hero-stat"><span class="hero-stat-num" data-target="99.8">0</span><span class="hero-stat-label">% Uptime</span></div>
+            <div class="hero-stat"><span class="hero-stat-num" data-target="3">0</span><span class="hero-stat-label">Sec injection</span></div>
+        </div>
+    </section>
+
+    <section class="hero-preview reveal">
+        <div class="preview-window" id="previewWindow">
+            <div class="preview-header"><div class="preview-dots"><span></span><span></span><span></span></div><span class="preview-title">Air DLC Loader — v2.0.1 • SpookyTime Ready</span></div>
+            <div class="preview-body">
+                <img src="logo.png" alt="Air DLC" class="preview-logo">
+                <div class="preview-status"><div class="preview-status-dot"></div> Connected to SpookyTime — Protected</div>
+                <div class="preview-bar"><div class="preview-bar-fill"></div></div>
+                <span class="preview-bar-text">Injection ready • 3 sec</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="page-section reveal">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;max-width:900px;margin:0 auto;text-align:center">
+            <div style="padding:24px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+                <div style="font-size:1.7rem;font-weight:700;letter-spacing:-0.02em">80+</div>
+                <div style="font-size:.72rem;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.08em;margin-top:4px">Функций</div>
+            </div>
+            <div style="padding:24px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+                <div style="font-size:1.7rem;font-weight:700;letter-spacing:-0.02em">1–3 сек</div>
+                <div style="font-size:.72rem;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.08em;margin-top:4px">Инжект</div>
+            </div>
+            <div style="padding:24px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+                <div style="font-size:1.7rem;font-weight:700;letter-spacing:-0.02em">24/7</div>
+                <div style="font-size:.72rem;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.08em;margin-top:4px">Поддержка</div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-left"><img src="logo.png" alt="Air DLC" class="footer-logo-img"><span class="footer-brand">Air DLC</span></div>
+            <span class="footer-copy">&copy; 2026 Air DLC</span>
+            <div class="footer-links"><a href="https://t.me/airdlcbot" target="_blank">Bot</a><a href="https://t.me/dlc_airclient" target="_blank">Telegram</a></div>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-tabs"><button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button><button class="modal-tab" id="tabRegister" onclick="switchTab('register')">Sign Up</button></div>
+            <form class="auth-form" id="loginForm" onsubmit="return handleLogin(event)">
+                <div class="form-field"><label>Username</label><input type="text" id="loginUsername" placeholder="Username" required></div>
+                <div class="form-field"><label>Password</label><input type="password" id="loginPassword" placeholder="Password" required></div>
+                <button type="submit" class="btn-primary btn-full" id="loginBtn"><span>Sign In</span> <div class="btn-spinner" style="display:none"></div></button>
+                <p class="form-switch">No account? <a onclick="switchTab('register')">Sign Up</a></p>
+            </form>
+            <form class="auth-form" id="registerForm" style="display:none" onsubmit="return handleRegister(event)">
+                <div class="form-field"><label>Username</label><input type="text" id="regUsername" placeholder="Username" required></div>
+                <div class="form-field"><label>Email</label><input type="email" id="regEmail" placeholder="Email" required></div>
+                <div class="form-field"><label>Password</label><input type="password" id="regPassword" placeholder="Password" required></div>
+                <div class="form-field"><label>License Key</label><input type="text" id="regKey" placeholder="XXXX-XXXX-XXXX" required></div>
+                <button type="submit" class="btn-primary btn-full" id="regBtn"><span>Create Account</span> <div class="btn-spinner" style="display:none"></div></button>
+                <p class="form-switch">Have account? <a onclick="switchTab('login')">Sign In</a></p>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"><span id="toastText"></span></div>
+    <script src="script.js"></script>
+</body>
+</html>

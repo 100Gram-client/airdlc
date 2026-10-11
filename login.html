@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход — Cloud Config | Air DLC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="cloudconfig.css">
+</head>
+<body>
+  <div class="cc-aurora"><div class="cc-grid-bg"></div><div class="cc-orb-3"></div></div>
+
+  <div class="cc-auth-container">
+    <div class="cc-auth-card">
+      <div style="text-align:center;margin-bottom:24px">
+        <div style="font-size:2rem;margin-bottom:8px">☁️</div>
+        <h2>Вход в Cloud Config</h2>
+        <p class="cc-auth-subtitle">Облачные конфиги для Air DLC</p>
+      </div>
+
+      <div id="loginError" style="display:none;padding:12px 16px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:8px;font-size:0.82rem;color:#ef4444;margin-bottom:16px"></div>
+
+      <form class="cc-auth-form" id="loginForm">
+        <div>
+          <label class="cc-input-label">Имя пользователя</label>
+          <input type="text" class="cc-input" id="loginUsername" placeholder="username" required autocomplete="username">
+        </div>
+        <div>
+          <label class="cc-input-label">Пароль</label>
+          <input type="password" class="cc-input" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="cc-btn cc-btn-primary cc-btn-full" id="loginBtn">
+          <span>Войти</span>
+        </button>
+      </form>
+
+      <div class="cc-auth-footer">
+        Нет аккаунта? <a href="register.html">Регистрация</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="cloud.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('expired')) {
+      document.getElementById('loginError').style.display = 'block';
+      document.getElementById('loginError').textContent = 'Сессия истекла. Войдите снова.';
+    }
+    if (params.get('redirect')) {
+      sessionStorage.setItem('cc_redirect', params.get('redirect'));
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      const errBox = document.getElementById('loginError');
+      errBox.style.display = 'none';
+      btn.disabled = true;
+      btn.innerHTML = '<span>Вход...</span>';
+
+      try {
+        const data = await CloudApi.login(
+          document.getElementById('loginUsername').value.trim(),
+          document.getElementById('loginPassword').value
+        );
+        CloudAuth.setSession({ token: data.token, refresh_token: data.refresh_token, username: data.user.username });
+        CloudToast.success('Добро пожаловать, ' + data.user.username + '!');
+        const redirect = sessionStorage.getItem('cc_redirect') || 'cloud.html';
+        sessionStorage.removeItem('cc_redirect');
+        setTimeout(() => window.location.href = redirect, 500);
+      } catch (err) {
+        errBox.style.display = 'block';
+        errBox.textContent = err.message || 'Ошибка входа';
+        btn.disabled = false;
+        btn.innerHTML = '<span>Войти</span>';
+      }
+    });
+  </script>
+</body>
+</html>

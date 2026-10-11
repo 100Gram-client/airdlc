@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Редактор — Cloud Config | Air DLC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="cloudconfig.css">
+</head>
+<body>
+  <div class="cc-aurora"><div class="cc-grid-bg"></div><div class="cc-orb-3"></div></div>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo"><img src="logo.png" alt="Air DLC" class="nav-logo-img"><span>Air DLC</span></a>
+      <div class="nav-center">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="cloud.html" class="nav-link">Cloud</a>
+        <a href="cloud-profile.html" class="nav-link">Profile</a>
+      </div>
+      <div class="nav-right">
+        <a href="cloud.html" class="nav-btn-outline">Назад</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="cc-page">
+    <div class="cc-page-header">
+      <h1 class="cc-page-title">Редактор конфига</h1>
+      <p class="cc-page-subtitle">Редактируй JSON или используй визуальный режим</p>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:20px">
+      <button class="cc-btn cc-btn-primary cc-btn-sm" id="tabJson" onclick="CloudEditor.switchTab('json')">JSON</button>
+      <button class="cc-btn cc-btn-secondary cc-btn-sm" id="tabVisual" onclick="CloudEditor.switchTab('visual')">Визуальный</button>
+    </div>
+
+    <div id="jsonTab">
+      <div class="cc-skeleton" style="height:400px;margin-bottom:16px" id="editorSkeleton"></div>
+      <textarea class="cc-json-editor" id="jsonEditor" style="display:none" spellcheck="false"></textarea>
+    </div>
+
+    <div id="visualTab" style="display:none">
+      <div id="visualModules"></div>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:20px">
+      <button class="cc-btn cc-btn-primary" onclick="CloudEditor.save()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Сохранить
+      </button>
+      <button class="cc-btn cc-btn-secondary" onclick="CloudEditor.reset()">Сбросить</button>
+    </div>
+  </div>
+
+  <script src="cloud.js"></script>
+  <script>
+    const CloudEditor = {
+      configId: null,
+      originalData: null,
+
+      async init() {
+        const params = new URLSearchParams(window.location.search);
+        this.configId = params.get('id');
+        if (!this.configId) {
+          CloudToast.error('ID конфига не указан');
+          setTimeout(() => window.location.href = 'cloud.html', 1500);
+          return;
+        }
+
+        try {
+          const data = await CloudApi.getConfig(this.configId);
+          this.originalData = data.data;
+          this.renderEditor();
+          this.renderVisual();
+          document.getElementById('editorSkeleton').style.display = 'none';
+          document.getElementById('jsonEditor').style.display = 'block';
+        } catch (err) {
+          CloudToast.error('Не удалось загрузить конфиг: ' + err.message);
+        }
+      },
+
+      renderEditor() {
+        const editor = document.getElementById('jsonEditor');
+        editor.value = JSON.stringify(this.originalData, null, 2);
+      },
+
+      renderVisual() {
+        const container = document.getElementById('visualModules');
+        const data = this.originalData;
+        const modules = data.modules || {};
+
+        const moduleNames = Object.keys(modules);
+        if (moduleNames.length === 0) {
+          container.innerHTML = '<div class="cc-empty"><h3>Нет модулей</h3><p>Добавь модули через JSON-редактор</p></div>';
+          return;
+        }
+
+        container.innerHTML = moduleNames.map(name => {
+          const mod = modules[name];
+          const settings = mod.settings || {};
+          const settingNames = Object.keys(settings);
+
+          return `
+            <div class="cc-card" style="margin-bottom:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                <div>
+                  <span style="font-weight:600;font-size:1rem">${CloudUtils.escapeHtml(name)}</span>
+                  ${mod.enabled ? '<span class="cc-badge cc-badge-success" style="margin-left:8px">ON</span>' : '<span class="cc-badge cc-badge-error" style="margin-left:8px">OFF</span>'}
+                </div>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--cc-text-secondary)">
+                  <input type="checkbox" ${mod.enabled ? 'checked' : ''} onchange="CloudEditor.toggleModule('${CloudUtils.escapeHtml(name)}', this.checked)" style="accent-color:#7c3aed">
+                  Включён
+                </label>
+              </div>
+              ${settingNames.length > 0 ? `
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+                  ${settingNames.map(s => `
+                    <div style="padding:8px 12px;background:rgba(255,255,255,0.02);border:1px solid var(--cc-border-mid);border-radius:6px">
+                      <div style="font-size:0.7rem;color:var(--cc-text-tertiary);text-transform:uppercase;letter-spacing:0.04em">${CloudUtils.escapeHtml(s)}</div>
+                      <div style="font-family:var(--cc-font-mono);font-size:0.85rem;margin-top:2px">${CloudUtils.escapeHtml(JSON.stringify(settings[s]))}</div>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : '<div style="font-size:0.78rem;color:var(--cc-text-tertiary)">Нет настроек</div>'}
+            </div>
+          `;
+        }).join('');
+      },
+
+      toggleModule(name, enabled) {
+        const editor = document.getElementById('jsonEditor');
+        const data = CloudUtils.validateJson(editor.value);
+        if (!data.valid) {
+          CloudToast.error('JSON содержит ошибку');
+          return;
+        }
+        if (!data.data.modules) data.data.modules = {};
+        if (!data.data.modules[name]) data.data.modules[name] = {};
+        data.data.modules[name].enabled = enabled;
+        editor.value = JSON.stringify(data.data, null, 2);
+        this.originalData = data.data;
+        this.renderVisual();
+      },
+
+      switchTab(tab) {
+        const jsonTab = document.getElementById('jsonTab');
+        const visualTab = document.getElementById('visualTab');
+        const jsonBtn = document.getElementById('tabJson');
+        const visualBtn = document.getElementById('tabVisual');
+
+        if (tab === 'json') {
+          jsonTab.style.display = 'block';
+          visualTab.style.display = 'none';
+          jsonBtn.className = 'cc-btn cc-btn-primary cc-btn-sm';
+          visualBtn.className = 'cc-btn cc-btn-secondary cc-btn-sm';
+        } else {
+          const data = CloudUtils.validateJson(document.getElementById('jsonEditor').value);
+          if (!data.valid) {
+            CloudToast.error('JSON содержит ошибку: ' + data.error);
+            return;
+          }
+          this.originalData = data.data;
+          this.renderVisual();
+          jsonTab.style.display = 'none';
+          visualTab.style.display = 'block';
+          jsonBtn.className = 'cc-btn cc-btn-secondary cc-btn-sm';
+          visualBtn.className = 'cc-btn cc-btn-primary cc-btn-sm';
+        }
+      },
+
+      async save() {
+        const editor = document.getElementById('jsonEditor');
+        const data = CloudUtils.validateJson(editor.value);
+        if (!data.valid) {
+          CloudToast.error('JSON содержит ошибку: ' + data.error);
+          return;
+        }
+
+        try {
+          await CloudApi.createConfig(data.data.name || 'Config', data.data);
+          CloudToast.success('Конфиг сохранён');
+          this.originalData = data.data;
+        } catch (err) {
+          CloudToast.error('Ошибка сохранения: ' + err.message);
+        }
+      },
+
+      reset() {
+        if (!confirm('Сбросить изменения?')) return;
+        this.renderEditor();
+        this.renderVisual();
+      },
+    };
+
+    CloudEditor.init();
+  </script>
+</body>
+</html>

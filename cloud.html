@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloud Config — Dashboard | Air DLC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="cloudconfig.css">
+</head>
+<body>
+  <div class="cc-aurora"><div class="cc-grid-bg"></div><div class="cc-orb-3"></div></div>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo"><img src="logo.png" alt="Air DLC" class="nav-logo-img"><span>Air DLC</span></a>
+      <div class="nav-center">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="cloud.html" class="nav-link active">Cloud</a>
+        <a href="cloud-profile.html" class="nav-link">Profile</a>
+      </div>
+      <div class="nav-right">
+        <button class="nav-btn-outline" onclick="CloudAuth.clearSession();window.location.href='login.html'">Выйти</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="cc-page">
+    <div class="cc-page-header">
+      <h1 class="cc-page-title">Облачные конфиги</h1>
+      <p class="cc-page-subtitle">Сохраняй, загружай и делись конфигами между устройствами</p>
+    </div>
+
+    <div class="cc-toolbar">
+      <div class="cc-search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Поиск по названию..." oninput="CloudDashboard.filter()">
+      </div>
+      <select class="cc-select" id="sortSelect" onchange="CloudDashboard.filter()">
+        <option value="newest">Сначала новые</option>
+        <option value="oldest">Сначала старые</option>
+        <option value="name">По имени</option>
+      </select>
+      <button class="cc-btn cc-btn-primary" onclick="CloudDashboard.createNew()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Config
+      </button>
+    </div>
+
+    <div id="configsContainer" class="cc-config-grid">
+      <div class="cc-skeleton" style="height:180px"></div>
+      <div class="cc-skeleton" style="height:180px"></div>
+      <div class="cc-skeleton" style="height:180px"></div>
+    </div>
+  </div>
+
+  <script src="cloud.js"></script>
+  <script>
+    const CloudDashboard = {
+      configs: [],
+
+      async load() {
+        const container = document.getElementById('configsContainer');
+        container.innerHTML = '<div class="cc-skeleton" style="height:180px"></div>'.repeat(3);
+
+        try {
+          const data = await CloudApi.getConfigs();
+          this.configs = data.configs || [];
+          this.render();
+        } catch (err) {
+          container.innerHTML = '';
+          CloudToast.error('Не удалось загрузить конфиги: ' + err.message);
+        }
+      },
+
+      render() {
+        const container = document.getElementById('configsContainer');
+        const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+        const sort = document.getElementById('sortSelect')?.value || 'newest';
+
+        let filtered = this.configs.filter(c => c.name.toLowerCase().includes(search));
+
+        if (sort === 'newest') filtered.sort((a, b) => (b.updated_at || b.created_at || '').localeCompare(a.updated_at || a.created_at || ''));
+        else if (sort === 'oldest') filtered.sort((a, b) => (a.created_at || '').localeCompare(b.created_at || ''));
+        else if (sort === 'name') filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+        if (filtered.length === 0) {
+          container.innerHTML = `
+            <div class="cc-empty" style="grid-column:1/-1">
+              <svg class="cc-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+              <h3>${this.configs.length === 0 ? 'Нет конфигов' : 'Ничего не найдено'}</h3>
+              <p>${this.configs.length === 0 ? 'Создай свой первый облачный конфиг' : 'Попробуй изменить поисковый запрос'}</p>
+              ${this.configs.length === 0 ? '<button class="cc-btn cc-btn-primary" onclick="CloudDashboard.createNew()">Создать конфиг</button>' : ''}
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = filtered.map(c => `
+          <div class="cc-config-card">
+            <div class="cc-config-card-header">
+              <div>
+                <h3 class="cc-config-card-name">${CloudUtils.escapeHtml(c.name)}</h3>
+                <span class="cc-config-card-id" onclick="CloudDashboard.copyId('${c.id}')" title="Нажми чтобы скопировать">
+                  ${CloudUtils.shortId(c.id)}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </span>
+              </div>
+            </div>
+            <div class="cc-config-card-meta">
+              <span>${CloudUtils.timeAgo(c.updated_at || c.created_at)}</span>
+              <span>${c.author ? 'by ' + CloudUtils.escapeHtml(c.author) : ''}</span>
+            </div>
+            <div class="cc-config-card-actions">
+              <button class="cc-btn cc-btn-primary cc-btn-sm" onclick="CloudDashboard.edit('${c.id}')">Edit</button>
+              <button class="cc-btn cc-btn-danger cc-btn-sm" onclick="CloudDashboard.delete('${c.id}','${CloudUtils.escapeHtml(c.name)}')">Delete</button>
+            </div>
+          </div>
+        `).join('');
+      },
+
+      filter() {
+        this.render();
+      },
+
+      copyId(id) {
+        CloudUtils.copyToClipboard(id);
+        CloudToast.success('ID скопирован в буфер обмена');
+      },
+
+      createNew() {
+        const name = prompt('Название конфига:', 'My Config');
+        if (!name) return;
+        CloudApi.createConfig(name, { name, author: CloudAuth.getUsername(), created_at: new Date().toISOString(), modules: {} })
+          .then(() => { CloudToast.success('Конфиг создан'); this.load(); })
+          .catch(err => CloudToast.error(err.message));
+      },
+
+      edit(id) {
+        window.location.href = 'cloud-editor.html?id=' + id;
+      },
+
+      async delete(id, name) {
+        if (!confirm(`Удалить конфиг "${name}"?`)) return;
+        try {
+          await CloudApi.deleteConfig(id);
+          CloudToast.success('Конфиг удалён');
+          this.load();
+        } catch (err) {
+          CloudToast.error(err.message);
+        }
+      },
+    };
+
+    CloudDashboard.load();
+  </script>
+</body>
+</html>

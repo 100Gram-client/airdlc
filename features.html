@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Features — Air DLC</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar">
+<div class="background-effects"><div class="grid-bg"></div></div>
+    <nav class="navbar" id="navbar">
         <div class="nav-inner">
             <a href="index.html" class="nav-logo"><img src="logo.png" alt="Air DLC" class="nav-logo-img"><span>Air DLC</span></a>
             <div class="nav-center" id="navCenter">
@@ -37,10 +38,10 @@
     </nav>
 
     <section class="page-section" style="padding-top:120px">
-        <div class="section-header">
-            <span class="section-tag">Features</span>
+        <div class="section-header reveal">
+            <span class="section-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Возможности • Arev style</span>
             <h2 class="section-title">Everything you need</h2>
-            <p class="section-desc">Built for performance. Designed for stealth.</p>
+            <p class="section-desc">Built for performance. Designed for stealth. Glass, glow и плавные анимации из ArevClient.</p>
         </div>
         <div class="features-grid">
             <div class="feature-card">
@@ -76,7 +77,24 @@
         </div>
     </section>
 
-    <footer class="footer"><div class="footer-inner"><div class="footer-left"><img src="logo.png" alt="Air DLC" class="footer-logo-img"><span class="footer-brand">Air DLC</span></div><span class="footer-copy">&copy; 2026 Air DLC</span><div class="footer-links"><a href="https://t.me/airdlcbot" target="_blank">Bot</a><a href="https://t.me/dlc_airclient" target="_blank">Telegram</a></div></div></footer>
+    <!-- Arev-style extra 80+ tags -->
+    <section class="page-section reveal" style="padding-top:0;padding-bottom:80px">
+        <div class="glass-light" style="padding:48px 32px;border-radius:24px;text-align:center;position:relative;overflow:hidden">
+            <div style="font-size:4rem;font-weight:900;background:linear-gradient(135deg,#fff 0%, #555 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1">80+</div>
+            <h3 style="font-size:1.4rem;font-weight:700;margin:12px 0 8px">И ещё множество функций</h3>
+            <p style="font-size:.9rem;color:var(--text3);max-width:520px;margin:0 auto;line-height:1.6">Полный набор как у Arev — от NoSlow до ChestStealer, всё в glass-карточках</p>
+            <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:24px">
+                <span class="feature-tag" style="padding:8px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;font-size:.78rem;color:var(--text2)">NoSlow</span>
+                <span class="feature-tag" style="padding:8px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;font-size:.78rem;color:var(--text2)">Speed</span>
+                <span class="feature-tag" style="padding:8px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;font-size:.78rem;color:var(--text2)">Flight</span>
+                <span class="feature-tag" style="padding:8px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;font-size:.78rem;color:var(--text2)">ESP</span>
+                <span class="feature-tag" style="padding:8px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;font-size:.78rem;color:var(--text2)">Fullbright</span>
+                <span class="feature-tag" style="padding:8px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;font-size:.78rem;color:var(--text2)">AutoTotem</span>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer"><div class="footer-inner"><div class="footer-left"><img src="logo.png" alt="Air DLC" class="footer-logo-img"><span class="footer-brand">Air DLC</span></div><span class="footer-copy">&copy; 2026 Air DLC • Arev inspired</span><div class="footer-links"><a href="https://t.me/airdlcbot" target="_blank">Bot</a><a href="https://t.me/dlc_airclient" target="_blank">Telegram</a><a href="https://arevclient.github.io/" target="_blank" style="opacity:.5">Ref</a></div></div></footer>
 
     <div class="modal-overlay" id="authModal">
         <div class="modal">

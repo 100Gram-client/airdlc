@@ -390,3 +390,130 @@ document.addEventListener('click', function(e) {
         if (document.querySelector('.hero-stat-num')) animateCounters();
     });
 })();
+
+/* ===== ArevClient visual integration — isolated, no conflicts ===== */
+(function arevIntegration(){
+  // 1. particles
+  try{
+    var pc = document.getElementById('particles');
+    if(pc){
+      for(var i=0;i<40;i++){
+        var d=document.createElement('div');
+        d.className='particle'+(Math.random()>0.5?' glow':'');
+        d.style.left=(Math.random()*100)+'%';
+        d.style.animationDelay=(Math.random()*20)+'s';
+        d.style.animationDuration=(14+Math.random()*14)+'s';
+        var sz=(2+Math.random()*3)+'px';
+        d.style.width=sz; d.style.height=sz;
+        pc.appendChild(d);
+      }
+    }
+  }catch(e){}
+
+  // 2. navbar scrolled (Arev header.scrolled)
+  try{
+    var navbar=document.getElementById('navbar')||document.querySelector('.navbar');
+    if(navbar){
+      var onScroll=function(){
+        if(window.scrollY>40) navbar.classList.add('scrolled');
+        else navbar.classList.remove('scrolled');
+      };
+      window.addEventListener('scroll', onScroll, {passive:true});
+      onScroll();
+    }
+  }catch(e){}
+
+  // 3. cursor glow (desktop only)
+  try{
+    var glow=document.getElementById('cursorGlow');
+    if(glow && window.matchMedia('(hover: hover)').matches){
+      var mx=0,my=0,gx=0,gy=0;
+      document.addEventListener('mousemove', function(e){ mx=e.clientX; my=e.clientY; }, {passive:true});
+      (function anim(){
+        gx += (mx - gx)*0.10;
+        gy += (my - gy)*0.10;
+        glow.style.left=gx+'px';
+        glow.style.top=gy+'px';
+        requestAnimationFrame(anim);
+      })();
+      document.addEventListener('mouseleave', function(){ glow.style.opacity='0'; });
+      document.addEventListener('mouseenter', function(){ glow.style.opacity='0.9'; });
+    }
+  }catch(e){}
+
+  // 4. reveal on scroll (IntersectionObserver)
+  try{
+    var reveals=document.querySelectorAll('.reveal, .feature-card, .download-card, .preview-window, .dash-card, .admin-key-item');
+    // ensure .reveal class for observer
+    reveals.forEach(function(el){
+      if(!el.classList.contains('reveal')) el.classList.add('reveal');
+    });
+    if('IntersectionObserver' in window){
+      var io=new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          if(en.isIntersecting){
+            en.target.classList.add('visible');
+            io.unobserve(en.target);
+          }
+        });
+      },{threshold:0.12, rootMargin:'0px 0px -40px 0px'});
+      document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+      // slight stagger already handled via CSS
+    } else {
+      document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('visible'); });
+    }
+  }catch(e){}
+
+  // 5. preview 3D tilt (Arev screenshotWrapper)
+  try{
+    var pw=document.getElementById('previewWindow')||document.querySelector('.preview-window');
+    if(pw && window.matchMedia('(hover: hover)').matches){
+      pw.addEventListener('mousemove', function(e){
+        var r=pw.getBoundingClientRect();
+        var x=e.clientX - r.left;
+        var y=e.clientY - r.top;
+        var cx=r.width/2, cy=r.height/2;
+        var rx=(y - cy)/18;
+        var ry=(cx - x)/18;
+        pw.style.transform='rotateX('+rx+'deg) rotateY('+ry+'deg) translateY(-6px)';
+      });
+      pw.addEventListener('mouseleave', function(){
+        pw.style.transform='rotateX(0) rotateY(0) translateY(0)';
+      });
+    }
+  }catch(e){}
+
+  // 6. parallax orbs on scroll (Arev)
+  try{
+    var orbs=document.querySelectorAll('.orb');
+    if(orbs.length){
+      var ticking=false;
+      window.addEventListener('scroll', function(){
+        if(!ticking){
+          window.requestAnimationFrame(function(){
+            var sc=window.pageYOffset;
+            orbs.forEach(function(o,i){
+              var sp=0.04 + i*0.018;
+              o.style.transform='translateY('+(sc*sp)+'px)';
+            });
+            ticking=false;
+          });
+          ticking=true;
+        }
+      }, {passive:true});
+    }
+  }catch(e){}
+
+  // 7. smooth anchor scroll (Arev)
+  try{
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){
+      a.addEventListener('click', function(e){
+        var href=a.getAttribute('href');
+        if(href.length>1){
+          var t=document.querySelector(href);
+          if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth', block:'start'}); }
+        }
+      });
+    });
+  }catch(e){}
+})();

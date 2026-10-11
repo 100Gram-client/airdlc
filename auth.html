@@ -4,25 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login — Air DLC</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <style>
-        body{display:flex;align-items:center;justify-content:center;min-height:100vh}
-        .auth-page{width:100%;max-width:380px;padding:32px}
-        .auth-page .modal{position:static;transform:none;border:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px}
-        .auth-logo{text-align:center;margin-bottom:24px}
-        .auth-logo img{width:48px;height:48px;margin:0 auto 12px;object-fit:contain}
-        .auth-logo h2{font-size:1.2rem;font-weight:700}
-        .auth-logo p{font-size:.8rem;color:var(--text3);margin-top:4px}
-        .auth-from-loader{display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:var(--radius-sm);margin-bottom:20px;font-size:.8rem;color:var(--green)}
-        .auth-from-loader svg{flex-shrink:0}
-        .success-box{text-align:center;padding:24px 0}
-        .success-box svg{width:48px;height:48px;color:var(--green);margin-bottom:16px}
-        .success-box h3{font-size:1.1rem;font-weight:700;margin-bottom:8px}
-        .success-box p{font-size:.8rem;color:var(--text3);line-height:1.5}
-    </style>
-</head>
+    </head>
 <body>
+<div class="background-effects"><div class="grid-bg"></div></div>
     <div class="auth-page">
         <div class="modal" id="authModal">
             <div class="auth-logo">
@@ -97,6 +83,7 @@
         });
         return false;
     }
+    (function(){var pc=document.getElementById('particles');if(pc){for(var i=0;i<24;i++){var d=document.createElement('div');d.className='particle'+(Math.random()>0.5?' glow':'');d.style.left=(Math.random()*100)+'%';d.style.animationDelay=(Math.random()*20)+'s';d.style.animationDuration=(14+Math.random()*14)+'s';var sz=(2+Math.random()*3)+'px';d.style.width=sz;d.style.height=sz;pc.appendChild(d);}}var glow=document.getElementById('cursorGlow');if(glow){var mx=0,my=0,gx=0,gy=0;document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY},{passive:true});(function a(){gx+=(mx-gx)*0.1;gy+=(my-gy)*0.1;glow.style.left=gx+'px';glow.style.top=gy+'px';requestAnimationFrame(a)})()}})();
     </script>
 </body>
 </html>

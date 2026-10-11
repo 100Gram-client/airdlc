@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Профиль — Cloud Config | Air DLC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="cloudconfig.css">
+</head>
+<body>
+  <div class="cc-aurora"><div class="cc-grid-bg"></div><div class="cc-orb-3"></div></div>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo"><img src="logo.png" alt="Air DLC" class="nav-logo-img"><span>Air DLC</span></a>
+      <div class="nav-center">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="cloud.html" class="nav-link">Cloud</a>
+        <a href="cloud-profile.html" class="nav-link active">Profile</a>
+      </div>
+      <div class="nav-right">
+        <button class="nav-btn-outline" onclick="CloudAuth.clearSession();window.location.href='login.html'">Выйти</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="cc-page">
+    <div class="cc-page-header">
+      <h1 class="cc-page-title">Профиль</h1>
+      <p class="cc-page-subtitle">Управление аккаунтом Cloud Config</p>
+    </div>
+
+    <div class="cc-card" style="margin-bottom:24px">
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--cc-accent-gradient);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff" id="profileAvatar">?</div>
+        <div>
+          <div style="font-size:1.2rem;font-weight:700" id="profileName">—</div>
+          <div style="font-size:0.82rem;color:var(--cc-text-tertiary)" id="profileEmail">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cc-stats-grid">
+      <div class="cc-stat-card">
+        <div class="cc-stat-value" id="statConfigs">—</div>
+        <div class="cc-stat-label">Конфигов</div>
+      </div>
+      <div class="cc-stat-card">
+        <div class="cc-stat-value" id="statModules">—</div>
+        <div class="cc-stat-label">Модулей</div>
+      </div>
+      <div class="cc-stat-card">
+        <div class="cc-stat-value" id="statEnabled">—</div>
+        <div class="cc-stat-label">Активных</div>
+      </div>
+    </div>
+
+    <div class="cc-card">
+      <h3 style="margin:0 0 16px;font-size:1rem">Последние конфиги</h3>
+      <div id="recentConfigs">
+        <div class="cc-skeleton" style="height:48px;margin-bottom:8px"></div>
+        <div class="cc-skeleton" style="height:48px;margin-bottom:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="cloud.js"></script>
+  <script>
+    async function loadProfile() {
+      const session = CloudAuth.getSession();
+      if (!session) return;
+
+      document.getElementById('profileAvatar').textContent = (session.username || '?')[0].toUpperCase();
+      document.getElementById('profileName').textContent = session.username || '—';
+
+      try {
+        const data = await CloudApi.getConfigs();
+        const configs = data.configs || [];
+
+        document.getElementById('statConfigs').textContent = configs.length;
+
+        let totalModules = 0;
+        let enabledModules = 0;
+
+        for (const c of configs.slice(0, 20)) {
+          try {
+            const full = await CloudApi.getConfig(c.id);
+            const mods = full.data?.modules || {};
+            totalModules += Object.keys(mods).length;
+            enabledModules += Object.values(mods).filter(m => m.enabled).length;
+          } catch {}
+        }
+
+        document.getElementById('statModules').textContent = totalModules;
+        document.getElementById('statEnabled').textContent = enabledModules;
+
+        const recentContainer = document.getElementById('recentConfigs');
+        if (configs.length === 0) {
+          recentContainer.innerHTML = '<div style="text-align:center;color:var(--cc-text-tertiary);font-size:0.82rem;padding:20px">Нет конфигов</div>';
+        } else {
+          recentContainer.innerHTML = configs.slice(0, 5).map(c => `
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(255,255,255,0.02);border:1px solid var(--cc-border-mid);border-radius:8px;margin-bottom:6px;cursor:pointer" onclick="window.location.href='cloud-editor.html?id=${c.id}'">
+              <div>
+                <div style="font-weight:600;font-size:0.88rem">${CloudUtils.escapeHtml(c.name)}</div>
+                <div style="font-size:0.72rem;color:var(--cc-text-tertiary)">${CloudUtils.timeAgo(c.updated_at || c.created_at)}</div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--cc-text-tertiary)"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        CloudToast.error('Ошибка загрузки профиля: ' + err.message);
+      }
+    }
+
+    loadProfile();
+  </script>
+</body>
+</html>
